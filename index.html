@@ -12,7 +12,58 @@
 
 </head>
 <body class="text-primary transition-colors duration-500">
+<div class="container mx-auto max-w-7xl p-4 sm:p-6 md:p-8">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-primary drop-shadow-sm flex items-center justify-center">
+                <i data-lucide="briefcase" class="w-10 h-10 mr-4"></i>
+                Smart Travel Checklist
+            </h1>
+            <p class="text-lg text-primary/80 mt-2">Your personalized packing assistant</p>
+        </header>
 
+        <div class="bg-card p-6 rounded-2xl shadow-lg mb-8 border border-theme">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <h3 class="font-semibold text-secondary mb-3 flex items-center"><i data-lucide="map" class="w-5 h-5"></i>Trip Type</h3>
+                    <div id="trip-type-controls" class="flex flex-wrap gap-2"></div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-secondary mb-3 flex items-center"><i data-lucide="cloud-sun" class="w-5 h-5"></i>Season</h3>
+                    <div id="season-controls" class="flex flex-wrap gap-2"></div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-secondary mb-3 flex items-center"><i data-lucide="calendar-days" class="w-5 h-5"></i>Dates</h3>
+                    <div class="flex flex-col gap-2">
+                        <input type="date" id="start-date-input" class="p-2 border border-theme rounded-lg focus:ring-2 ring-accent-primary bg-transparent text-primary">
+                        <input type="date" id="end-date-input" class="p-2 border border-theme rounded-lg focus:ring-2 ring-accent-primary bg-transparent text-primary">
+                        <p class="text-sm text-secondary text-center">Duration: <span id="duration-display">0</span> days</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-secondary mb-3 flex items-center"><i data-lucide="plane" class="w-5 h-5"></i>Flight & Destination</h3>
+                    <div class="flex flex-col gap-2">
+                        <input type="text" id="destination-input" placeholder="e.g., Japan" class="p-2 border border-theme rounded-lg focus:ring-2 ring-accent-primary bg-transparent text-primary placeholder:text-secondary">
+                        <div class="mt-2">
+                            <input type="checkbox" id="long-flight-checkbox" class="h-4 w-4 rounded border-theme text-accent-primary ring-accent-primary bg-transparent">
+                            <label for="long-flight-checkbox" class="ml-2 text-secondary">Long Flight (>3h)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-8 px-2">
+            <h3 class="font-semibold text-lg text-secondary mb-2">Packing Progress</h3>
+            <div class="w-full bg-card rounded-full h-4 border border-theme">
+                <div id="progress-bar" class="accent-primary-bg h-full rounded-full text-xs font-medium text-center p-0.5 leading-none transition-all duration-500" style="width: 0%">0%</div>
+            </div>
+        </div>
+
+        <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            </div>
+
+    </div>
     <script src="js/main.js"></script>
 
 </body>

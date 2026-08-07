@@ -474,8 +474,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 bagBtn.title = currentBag ? `Bag: ${currentBag}` : 'Assign to bag';
                 bagBtn.onclick = (e) => {
                     e.stopPropagation();
-                    const currentIdx = bagOptions.indexOf(currentBag);
-                    const nextBag = bagOptions[(currentIdx + 1) % (bagOptions.length + 1)] || '';
+                    const liveBag = (currentState.bags || {})[uniqueId] || '';
+                    const currentIdx = bagOptions.indexOf(liveBag);
+                    const nextIdx = currentIdx + 1;
+                    const nextBag = nextIdx < bagOptions.length ? bagOptions[nextIdx] : '';
                     if (!currentState.bags) currentState.bags = {};
                     if (nextBag) {
                         currentState.bags[uniqueId] = nextBag;
@@ -605,28 +607,6 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryCard.querySelector('.category-progress-summary').style.display = isCollapsed ? 'inline' : 'none';
         }
 
-        // Quantity stepper event delegation
-        checklistContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('qty-minus') || e.target.classList.contains('qty-plus')) {
-                e.stopPropagation();
-                const uid = e.target.dataset.uid;
-                const baseQty = parseInt(e.target.dataset.base, 10);
-                if (!currentState.quantities) currentState.quantities = {};
-                const current = currentState.quantities[uid] != null ? currentState.quantities[uid] : baseQty;
-                const newQty = e.target.classList.contains('qty-plus') ? current + 1 : Math.max(1, current - 1);
-                currentState.quantities[uid] = newQty;
-
-                const stepper = e.target.closest('.quantity-stepper');
-                stepper.querySelector('.qty-value').textContent = newQty;
-
-                const li = e.target.closest('li');
-                const qtySpan = li.querySelector('.quantity-display');
-                if (qtySpan) qtySpan.textContent = `(x${newQty})`;
-
-                saveState();
-            }
-        });
-
         updateAllProgress();
         lucide.createIcons();
     }
@@ -702,6 +682,28 @@ document.addEventListener('DOMContentLoaded', () => {
     loadState();
     createControlButtons(tripTypeControls, tripTypes, 'tripType', currentState.tripType);
     createControlButtons(seasonControls, seasons, 'season', currentState.season);
+
+    // Quantity stepper event delegation (once, not per render)
+    checklistContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('qty-minus') || e.target.classList.contains('qty-plus')) {
+            e.stopPropagation();
+            const uid = e.target.dataset.uid;
+            const baseQty = parseInt(e.target.dataset.base, 10);
+            if (!currentState.quantities) currentState.quantities = {};
+            const current = currentState.quantities[uid] != null ? currentState.quantities[uid] : baseQty;
+            const newQty = e.target.classList.contains('qty-plus') ? current + 1 : Math.max(1, current - 1);
+            currentState.quantities[uid] = newQty;
+
+            const stepper = e.target.closest('.quantity-stepper');
+            stepper.querySelector('.qty-value').textContent = newQty;
+
+            const li = e.target.closest('li');
+            const qtySpan = li.querySelector('.quantity-display');
+            if (qtySpan) qtySpan.textContent = `(x${newQty})`;
+
+            saveState();
+        }
+    });
     renderSavedTripsDropdown();
 
     startDateInput.addEventListener('change', handleDateChange);
@@ -717,7 +719,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkFlightBtn.addEventListener('click', () => {
         const flight = currentState.flightNumber.trim();
         if (flight) {
-            window.open(`https://www.google.com/search?q=flight+${encodeURIComponent(flight)}`, '_blank');
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(flight)}`, '_blank');
         }
     });
     longFlightCheckbox.addEventListener('change', (e) => {

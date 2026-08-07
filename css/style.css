@@ -181,6 +181,26 @@ body { background: var(--bg-gradient); }
     animation: card-fade-in 0.5s ease-out forwards;
 }
 
+/* Expanded card spans full grid width */
+.category-card.expanded {
+    grid-column: 1 / -1;
+}
+
+.category-card.expanded .category-item-list {
+    columns: 2;
+    column-gap: 1.5rem;
+}
+
+@media (min-width: 1280px) {
+    .category-card.expanded .category-item-list {
+        columns: 3;
+    }
+}
+
+.category-card.expanded .category-item-list > li {
+    break-inside: avoid;
+}
+
 .category-item-list {
     transition: max-height 0.4s ease-out, opacity 0.3s ease-in-out, margin-top 0.4s ease-out;
     max-height: 2000px;

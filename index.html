@@ -64,6 +64,12 @@
                 <h3 class="font-semibold text-secondary mb-3 flex items-center"><i data-lucide="plane" class="w-5 h-5"></i>Flight & Options</h3>
                 <div class="flex flex-col gap-2">
                     <input type="text" id="destination-input" placeholder="e.g., Japan" class="p-2 border border-theme rounded-lg focus:ring-2 ring-accent-primary bg-transparent text-primary placeholder:text-secondary">
+                    <div class="flex items-center gap-1">
+                        <input type="text" id="flight-number-input" placeholder="Flight # (e.g., IB3214)" class="p-2 border border-theme rounded-lg focus:ring-2 ring-accent-primary bg-transparent text-primary placeholder:text-secondary flex-grow text-sm">
+                        <button id="check-flight-btn" class="p-2 border border-theme rounded-lg text-secondary hover:text-primary hover:bg-white/20 transition-colors flex-shrink-0" title="Check flight on Google">
+                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                     <div class="flex flex-col gap-1.5 mt-1">
                         <label class="flex items-center gap-2 text-sm text-secondary cursor-pointer">
                             <input type="checkbox" id="long-flight-checkbox" class="h-4 w-4 rounded border-theme text-accent-primary ring-accent-primary bg-transparent">
@@ -98,6 +104,11 @@
     </div>
 
     <!-- Checklist Grid -->
+    <div class="flex justify-end mb-3 px-2">
+        <button id="toggle-all-btn" class="text-sm px-3 py-1.5 border border-theme rounded-lg text-secondary hover:text-primary hover:bg-white/20 transition-colors flex items-center gap-1">
+            <i data-lucide="rows-3" class="w-4 h-4"></i> Expand all
+        </button>
+    </div>
     <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
 
 </div>

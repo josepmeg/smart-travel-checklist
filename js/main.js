@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Travel Adapter', category: 'Electronics', relevance: { default: 'recommended' } },
         { name: 'Nintendo Switch', category: 'Electronics', relevance: { longFlight: true, default: 'optional' } },
         { name: 'Selfie Stick / Tripod', category: 'Electronics', relevance: { default: 'optional' } },
+        { name: 'Backbone (iPhone Controller)', category: 'Electronics', relevance: { longFlight: true, default: 'optional' } },
+        { name: 'Backbone Carrying Case', category: 'Electronics', relevance: { longFlight: true, default: 'optional' } },
 
         // Chargers & Cables
         { name: 'USB-C Cable (phone/laptop)', category: 'Chargers & Cables', relevance: { default: 'recommended' } },
@@ -166,12 +168,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveTripBtn = document.getElementById('save-trip-btn');
     const loadTripSelect = document.getElementById('load-trip-select');
     const deleteTripBtn = document.getElementById('delete-trip-btn');
+    const flightNumberInput = document.getElementById('flight-number-input');
+    const checkFlightBtn = document.getElementById('check-flight-btn');
+    const toggleAllBtn = document.getElementById('toggle-all-btn');
 
     // --- STATE ---
     const defaultState = {
         tripType: 'City', season: 'Shoulder', days: 0,
         startDate: '', endDate: '', longFlight: false,
-        laundry: false, destination: '', darkMode: false,
+        laundry: false, destination: '', flightNumber: '', darkMode: false,
         checkboxes: {}, quantities: {}, bags: {}, customItems: {}
     };
     let currentState = { ...defaultState };
@@ -254,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startDateInput.value = currentState.startDate || '';
         endDateInput.value = currentState.endDate || '';
         destinationInput.value = currentState.destination || '';
+        flightNumberInput.value = currentState.flightNumber || '';
         longFlightCheckbox.checked = currentState.longFlight || false;
         laundryCheckbox.checked = currentState.laundry || false;
 
@@ -585,6 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryTitle.addEventListener('click', () => {
                 categoryCard.classList.toggle('collapsed');
                 const isCollapsed = categoryCard.classList.contains('collapsed');
+                categoryCard.classList.toggle('expanded', !isCollapsed);
                 categoryCard.querySelector('.category-progress-summary').style.display = isCollapsed ? 'inline' : 'none';
                 if (!isCollapsed) {
                     categoryTitle.classList.add('mb-4', 'border-b', 'border-theme');
@@ -594,6 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const isCollapsed = categoryCard.classList.contains('collapsed');
+            categoryCard.classList.toggle('expanded', !isCollapsed);
             categoryCard.querySelector('.category-progress-summary').style.display = isCollapsed ? 'inline' : 'none';
         }
 
@@ -702,6 +710,16 @@ document.addEventListener('DOMContentLoaded', () => {
         currentState.destination = e.target.value;
         renderAndSave();
     });
+    flightNumberInput.addEventListener('input', (e) => {
+        currentState.flightNumber = e.target.value;
+        saveState();
+    });
+    checkFlightBtn.addEventListener('click', () => {
+        const flight = currentState.flightNumber.trim();
+        if (flight) {
+            window.open(`https://www.google.com/search?q=flight+${encodeURIComponent(flight)}`, '_blank');
+        }
+    });
     longFlightCheckbox.addEventListener('change', (e) => {
         currentState.longFlight = e.target.checked;
         renderAndSave();
@@ -717,6 +735,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.value !== '') loadTrip(parseInt(e.target.value, 10));
     });
     deleteTripBtn.addEventListener('click', deleteTrip);
+
+    let allExpanded = false;
+    toggleAllBtn.addEventListener('click', () => {
+        allExpanded = !allExpanded;
+        document.querySelectorAll('.category-card').forEach(card => {
+            const titleBtn = card.querySelector('button');
+            if (allExpanded) {
+                card.classList.remove('collapsed');
+                card.classList.add('expanded');
+                if (titleBtn) titleBtn.classList.add('mb-4', 'border-b', 'border-theme');
+            } else {
+                card.classList.add('collapsed');
+                card.classList.remove('expanded');
+                if (titleBtn) titleBtn.classList.remove('mb-4', 'border-b', 'border-theme');
+            }
+            const summary = card.querySelector('.category-progress-summary');
+            if (summary) summary.style.display = allExpanded ? 'none' : 'inline';
+        });
+        toggleAllBtn.innerHTML = allExpanded
+            ? '<i data-lucide="rows-3" class="w-4 h-4"></i> Collapse all'
+            : '<i data-lucide="rows-3" class="w-4 h-4"></i> Expand all';
+        lucide.createIcons();
+    });
 
     updateTheme();
     handleDateChange();
